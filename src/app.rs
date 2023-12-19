@@ -50,15 +50,6 @@ pub fn App() -> impl IntoView {
 
             <p>"Welcome To Conny."</p>
 
-            <p>
-                "Recommended IDE setup: "
-                <a href="https://code.visualstudio.com/" target="_blank">"VS Code"</a>
-                " + "
-                <a href="https://github.com/tauri-apps/tauri-vscode" target="_blank">"Tauri"</a>
-                " + "
-                <a href="https://github.com/rust-lang/rust-analyzer" target="_blank">"rust-analyzer"</a>
-            </p>
-
             <form class="row" on:submit=greet>
                 <input
                     id="greet-input"
@@ -68,7 +59,13 @@ pub fn App() -> impl IntoView {
                 <button type="submit">"HOLA"</button>
             </form>
 
-            <p><b>{ move || greet_msg.get() }</b></p>
+            <div class="MainMenu">
+                <button>"HOLA"</button>
+                <button>"HOLA"</button>
+                <button>"Settings"</button>
+                <button>"Upcoming Features"</button>
+            </div>
+            // <p><b>{ move || greet_msg.get() }</b></p>
         </main>
     }
 }
