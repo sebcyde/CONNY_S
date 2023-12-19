@@ -20,6 +20,7 @@ pub mod config {
     #[derive(Serialize, Deserialize)]
     pub struct AppSettings {
         pub run_on_startup: bool,
+        pub keep_watch: bool,
     }
 
     #[derive(Serialize, Deserialize)]
@@ -104,6 +105,9 @@ pub mod config {
             app_settings: AppSettings {
                 // show_app_logo: true,
                 run_on_startup: true,
+
+                // TODO - Add in optional continuous watch - could get annoying
+                keep_watch: false,
             },
             conny_settings: ConnyConfig {
                 personality: String::from("Standard"),

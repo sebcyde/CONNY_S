@@ -1,6 +1,4 @@
 use leptos::*;
-use leptos_router::*;
-use serde::{Deserialize, Serialize};
 use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
 
@@ -8,11 +6,6 @@ use wasm_bindgen::prelude::*;
 extern "C" {
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "tauri"])]
     async fn invoke(cmd: &str, args: JsValue) -> JsValue;
-}
-
-#[derive(Serialize, Deserialize)]
-struct FunctionResponse {
-    response: i32,
 }
 
 #[component]
@@ -29,8 +22,8 @@ pub fn Home() -> impl IntoView {
     };
 
     let cleaning_text = move || match is_cleaning.get() {
-        true => "Cleaning...",
-        false => "Clean Files",
+        true => "Sorting...",
+        false => "Sort Files",
     };
 
     view! {
@@ -45,7 +38,7 @@ pub fn Home() -> impl IntoView {
             <button on:click=clean_directories>{cleaning_text}</button>
             <a href="/Settings">"Settings"</a>
             <a href="/Upcoming">"Upcoming Features"</a>
-            <a href="/Other">"Testing Broken Link"</a>
+            <a href="/Other">"Testing Not Found Link"</a>
         </div>
 
     </div>
