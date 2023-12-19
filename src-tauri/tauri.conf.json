@@ -36,8 +36,8 @@
 		"windows": [
 			{
 				"fullscreen": false,
-				"resizable": true,
-				"title": "Conny S",
+				"resizable": false,
+				"title": "Conny-S",
 				"width": 400,
 				"height": 600
 			}

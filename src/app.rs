@@ -2,7 +2,6 @@ use leptos::*;
 use leptos_router::*;
 use serde::{Deserialize, Serialize};
 use serde_wasm_bindgen::to_value;
-use std::{thread, time};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -20,15 +19,9 @@ struct FunctionResponse {
 pub fn Home() -> impl IntoView {
     let (is_cleaning, set_is_cleaning) = create_signal(false);
 
-    let Nav = move |Route: &str| {
-        println!(" Navigating to route: {}", Route);
-        // tauri::WindowUrl::App("result.html".into())
-    };
-
     let clean_directories = move |_| {
         spawn_local(async move {
             set_is_cleaning.set(true);
-            // thread::sleep(time::Duration::from_secs(3));
             let args: JsValue = to_value("").unwrap();
             invoke("clean_dirs", args).await;
             set_is_cleaning.set(false);
@@ -41,63 +34,99 @@ pub fn Home() -> impl IntoView {
     };
 
     view! {
-        <div>
-            <div class="row">
-                <a href="" target="_blank">
-                    <img src="public/tauri.svg" class="logo tauri" alt="Tauri logo"/>
-                </a>
-
-            </div>
-
-            <p>"Welcome To Conny."</p>
-
-            <div class="MainMenu">
-
-                <button on:click=clean_directories>{cleaning_text}</button>
-
-                <button>"Settings"</button>
-                <button>"Upcoming Features"</button>
-            </div>
+    <div class="HomePage">
+        <div class="row">
+            <img src="public/tauri.svg" class="logo tauri" alt="Tauri logo"/>
         </div>
 
-    }
+        <p>"Welcome To Conny."</p>
+
+        <div class="MainMenu">
+            <button on:click=clean_directories>{cleaning_text}</button>
+            <a href="/Settings">"Settings"</a>
+            <a href="/Upcoming">"Upcoming Features"</a>
+            <a href="/Other">"Testing Broken Link"</a>
+        </div>
+
+    </div>
+        }
 }
 
 #[component]
 pub fn Settings() -> impl IntoView {
-    let Nav = move |Route: &str| {
-        println!(" Navigating to route: {}", Route);
+    let setup_config = move |_| {
+        spawn_local(async move {
+            let args: JsValue = to_value("").unwrap();
+            invoke("run_setup_config", args).await;
+        });
     };
 
+    // pub struct UserData {
+    //     pub user_name: String,
+    //     // pub role: String,
+    // }
+
+    // #[derive(Serialize, Deserialize)]
+    // pub struct AppSettings {
+    //     pub run_on_startup: bool,
+    // }
+
+    // #[derive(Serialize, Deserialize)]
+    // pub struct ConnyConfig {
+    //     pub personality: String, // Personality Enum
+    // }
+
+    // #[derive(Serialize, Deserialize)]
+    // pub struct UserConfig {
+    //     pub user_data: UserData,
+    //     pub conny_settings: ConnyConfig,
+    //     pub app_settings: AppSettings,
+    // }
+
     view! {
-        <main class="container">
-            <p>"Settings"</p>
-        </main>
+        <div class="settings_page">
+            <h2 class="PageTitle">"Settings"</h2>
+
+            <form>
+            // User Settings
+            <input placeholder="User Name"/>
+            <input placeholder="User Role"/>
+
+            // App Settings
+            <input placeholder="Run on startup?"/>
+            <input placeholder="File by date?"/>
+
+
+            // Conny Settings
+            <input placeholder="Personality type"/>
+            <input placeholder="User Name"/>
+
+
+            <button on:click=setup_config>Save</button>
+
+            </form>
+            <a href="/">"Back to Home"</a>
+
+        </div>
     }
 }
 
 #[component]
 pub fn Upcoming() -> impl IntoView {
-    let Nav = move |Route: &str| {
-        println!(" Navigating to route: {}", Route);
-    };
-
     view! {
-        <main class="container">
-            <p>"Upcoming Features"</p>
-        </main>
+        <div class="UpcomingPage">
+            <h2 class="PageTitle">"Upcoming Features"</h2>
+            <a href="/">"Back to Home"</a>
+        </div>
     }
 }
 
 #[component]
 pub fn NotFound() -> impl IntoView {
-    let Nav = move |Route: &str| {
-        println!(" Navigating to route: {}", Route);
-    };
-
     view! {
-        <main class="container">
-            <p>"Not Found"</p>
-        </main>
+        <div class="NotFoundPage">
+            <h2 class="PageTitle">"Not Found"</h2>
+            <a href="/">"Back to Home"</a>
+        </div>
     }
 }

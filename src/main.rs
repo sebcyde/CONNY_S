@@ -9,14 +9,12 @@ fn main() {
         view! {
             <Router>
             // Navbar ?
-                <main class="container">
-                    <Routes>
-                        <Route path="/" view=Home/>
-                        <Route path="/Settings" view=Settings/>
-                        <Route path="/Upcoming" view=Upcoming/>
-                        <Route path="/*any" view=NotFound/>
-                    </Routes>
-                </main>
+                <Routes>
+                    <Route path="/" view=Home/>
+                    <Route path="/Settings" view=Settings/>
+                    <Route path="/Upcoming" view=Upcoming/>
+                    <Route path="/*any" view=NotFound/>
+                </Routes>
             </Router>
         }
     })
