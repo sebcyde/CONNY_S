@@ -2,10 +2,7 @@ pub mod config {
 
     use serde::{Deserialize, Serialize};
 
-    use crate::get_dirs::get_dirs::{
-        get_config_file, get_config_root, get_conny_directory, get_documents_dir,
-    };
-    use crate::get_input::input::{get_input, send_output};
+    use crate::get_dirs::get_dirs::{get_config_file, get_config_root};
     use std::fs::read_to_string;
     use std::fs::File;
     use std::io::Write;
@@ -14,7 +11,6 @@ pub mod config {
     #[derive(Serialize, Deserialize)]
     pub struct UserData {
         pub user_name: String,
-        // pub role: String,
     }
 
     #[derive(Serialize, Deserialize)]
@@ -35,78 +31,18 @@ pub mod config {
         pub app_settings: AppSettings,
     }
 
-    pub async fn setup_config() {
-        println!("Retrieving config...");
-        let conny_dir_path: PathBuf = get_conny_directory();
-        let config_dir_path: PathBuf = get_config_root();
-
-        if !Path::new(&config_dir_path).exists() {
-            println!("No config file detected. Creating...");
-            set_config_files().await
-        }
-
-        if !Path::new(&conny_dir_path).exists() {
-            println!("No Conny directory detected. Creating...\n");
-            _ = std::fs::create_dir_all(&conny_dir_path);
-
-            let supported_file_types: Vec<&str> = vec![
-                "Image",
-                "Video",
-                "Audio",
-                "Archive",
-                "Book",
-                "Documents",
-                "Font",
-                "Application",
-                "Other",
-                "Custom",
-            ];
-
-            for type_str in supported_file_types {
-                let mut c: PathBuf = conny_dir_path.clone();
-                c.push(type_str);
-                _ = std::fs::create_dir_all(&c);
-            }
-        }
-    }
-
-    pub async fn set_config_files() {
-        println!("Starting initial setup.");
-        send_output("Welcome to Clarity! What's your name?").await;
-        let user_name = get_input().await;
-        create_config_file(&user_name.unwrap()).await;
-    }
-
-    pub async fn get_config_data() -> UserConfig {
-        let config_path: PathBuf = get_config_file();
-        println!("config_path: {:?}", config_path);
-        let config_value: &str = &read_to_string(config_path).unwrap();
-        let config: UserConfig = serde_json::from_str(config_value).unwrap();
-        return config;
-    }
-
-    async fn create_config_file(name: &str) {
-        let config_path: PathBuf = get_config_root();
-        std::fs::create_dir_all(&config_path).unwrap();
-
+    async fn set_default_config_files() {
+        std::fs::create_dir_all(&get_config_root()).unwrap();
         let config_path: PathBuf = get_config_file();
         let mut config_file: File = File::create(&config_path).unwrap();
 
+        // Default User Settings
         let user_config: UserConfig = UserConfig {
             user_data: UserData {
-                user_name: name.trim_end_matches(&['\r', '\n'][..]).to_owned(),
+                user_name: String::from("Default User"),
             },
-            // watch_settings: WatchConfig {
-            //     watch_documents: false,
-            //     watch_downloads: true,
-            //     sort_by_date: false,
-            //     notifications: true,
-            // },
             app_settings: AppSettings {
-                // show_app_logo: true,
-                run_on_startup: true,
-
-                // TODO - Add in optional continuous watch - could get annoying
+                run_on_startup: false,
                 keep_watch: false,
             },
             conny_settings: ConnyConfig {
@@ -114,6 +50,28 @@ pub mod config {
             },
         };
 
+        let json_data: String = serde_json::to_string(&user_config).unwrap();
+        _ = config_file.write_all(json_data.as_bytes());
+    }
+
+    pub async fn get_config_data() -> UserConfig {
+        let config_path: PathBuf = get_config_file();
+        if !std::path::Path::exists(&config_path) {
+            set_default_config_files().await;
+        }
+        let config_value: &str = &read_to_string(config_path).unwrap();
+        let config: UserConfig = serde_json::from_str(config_value).unwrap();
+        return config;
+    }
+
+    pub async fn update_config_files(user_config: UserConfig) {
+        let user_config_dir_path: PathBuf = get_config_root();
+        if !Path::new(&user_config_dir_path).exists() {
+            set_default_config_files().await;
+        }
+
+        let config_path: PathBuf = get_config_file();
+        let mut config_file: File = File::create(&config_path).unwrap();
         let json_data: String = serde_json::to_string(&user_config).unwrap();
         _ = config_file.write_all(json_data.as_bytes());
     }
