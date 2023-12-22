@@ -2,6 +2,11 @@ use leptos::*;
 use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
 
+use crate::helpers::{
+    self,
+    functions::{AppSettings, ConnyConfig, UpdateParams, UserConfig, UserData},
+};
+
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "tauri"])]
@@ -17,51 +22,53 @@ pub fn Settings() -> impl IntoView {
         false => "Save",
     };
 
-    let setup_config = move |_| {
-        spawn_local(async move {
-            let args: JsValue = to_value("").unwrap();
-            invoke("run_setup_config", args).await;
-        });
-    };
+    let (all_user_data, set_all_user_data) = create_signal(String::new());
 
     let (config, set_config) = create_signal(JsValue::NULL);
 
-    spawn_local(async move {
-        // Optional Setup
-        invoke("run_setup_config", to_value("").unwrap()).await;
+    let get_users = move |_| {
+        spawn_local(async move {
+            let json_string: String = helpers::functions::get_users_data().await;
+            set_all_user_data.set(json_string.as_str().to_owned());
+        });
+    };
 
-        // Pull Config
-        let user_config: JsValue = invoke("get_user_config", to_value("").unwrap()).await;
-        set_config.set(user_config);
+    let update_user = move |_| {
+        spawn_local(async move {
+            let user_data = UserData {
+                user_name: "-NmElTd5XLZfwDZF7WPh".to_string(), // Placeholder user name
+            };
 
-        println!("{:?}", config);
-    });
+            let app_settings = AppSettings {
+                run_on_startup: true, // Placeholder values for AppSettings
+                keep_watch: false,
+            };
 
-    // pub struct UserData {
-    //     pub user_name: String,
-    //     // pub role: String,
-    // }
+            let conny_config = ConnyConfig {
+                personality: "Friendly".to_string(), // Placeholder personality
+            };
 
-    // #[derive(Serialize, Deserialize)]
-    // pub struct AppSettings {
-    //     pub run_on_startup: bool,
-    // }
+            let user_config = UserConfig {
+                user_data,
+                conny_settings: conny_config,
+                app_settings,
+            };
 
-    // #[derive(Serialize, Deserialize)]
-    // pub struct ConnyConfig {
-    //     pub personality: String, // Personality Enum
-    // }
+            let update_params = UpdateParams {
+                id: "user_id_here".to_string(), // Placeholder user ID
+                new_details: user_config,
+            };
 
-    // #[derive(Serialize, Deserialize)]
-    // pub struct UserConfig {
-    //     pub user_data: UserData,
-    //     pub conny_settings: ConnyConfig,
-    //     pub app_settings: AppSettings,
-    // }
+            helpers::functions::update_user(update_params).await;
+            // set_all_user_data.set(json_string.as_str().to_owned());
+        });
+    };
 
     view! {
     <div class="settings_page">
             <h2 class="PageTitle">"Settings"</h2>
+
+            <p>{all_user_data}</p>
 
             <form>
             // User Settings
@@ -77,8 +84,8 @@ pub fn Settings() -> impl IntoView {
             <input placeholder="Personality type"/>
             <input placeholder="User Name"/>
 
-            <button on:click=setup_config>{saving_text}</button>
-
+            <button on:click=update_user>{saving_text}</button>
+            <button on:click=get_users>"get_existing_user"</button>
 
             </form>
             <a href="/">"Back to Home"</a>

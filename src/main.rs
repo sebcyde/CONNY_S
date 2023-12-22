@@ -5,6 +5,7 @@ mod settings;
 mod sign_in;
 mod sign_up;
 mod upcoming;
+pub mod helpers;
 
 use app::*;
 use leptos::*;
