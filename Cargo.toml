@@ -13,6 +13,5 @@ wasm-bindgen-futures = "0.4"
 js-sys = "0.3"
 leptos_router = { version = "0.5.4", features = ["csr"]}
 
-
 [workspace]
 members = ["src-tauri"]
