@@ -1,6 +1,6 @@
 pub mod functions {
 
-    use std::collections::HashMap;
+    use std::{collections::HashMap, fs::read_to_string};
 
     use leptos::*;
     use serde::{Deserialize, Serialize};
@@ -15,52 +15,89 @@ pub mod functions {
         async fn invoke(cmd: &str, args: JsValue) -> JsValue;
     }
 
-    pub async fn get_users_data() -> String {
-        let data: JsValue = invoke("get_users", to_value("").unwrap()).await;
-        let json_value: serde_json::Value = serde_wasm_bindgen::from_value(data).unwrap();
-        let json_string: String = to_string_pretty(&json_value).unwrap();
-        json_string
-    }
-
-    ///////////////////////////////////////////////////////////////
-    #[derive(Serialize)]
+    #[derive(Serialize, Deserialize, Clone)]
     pub struct UserData {
         pub user_name: String,
     }
 
-    #[derive(Serialize)]
+    #[derive(Serialize, Deserialize, Clone)]
     pub struct AppSettings {
         pub run_on_startup: bool,
-        pub keep_watch: bool,
+        pub constant_watch: bool,
     }
 
-    #[derive(Serialize)]
+    #[derive(Serialize, Deserialize, Clone)]
     pub struct ConnyConfig {
         pub personality: String,
     }
-
-    #[derive(Serialize)]
+    #[derive(Serialize, Deserialize, Clone)]
     pub struct UserConfig {
         pub user_data: UserData,
         pub conny_settings: ConnyConfig,
         pub app_settings: AppSettings,
     }
 
-    #[derive(Serialize)]
-    pub struct UpdateParams {
-        pub id: String,
-        pub new_details: UserConfig,
+    /////////////// General Functions
+
+    pub fn convert_js_value_to_string(data: JsValue) -> String {
+        return data.as_string().unwrap();
     }
 
-    pub async fn update_user(update_details: UpdateParams) {
+    pub fn get_default_user_config() -> UserConfig {
+        let user_data: UserData = UserData {
+            user_name: String::from("Default_User"),
+        };
+        let conny_settings: ConnyConfig = ConnyConfig {
+            personality: String::from("Standard"),
+        };
+        let app_settings: AppSettings = AppSettings {
+            run_on_startup: false,
+            constant_watch: false,
+        };
+
+        return UserConfig {
+            user_data,
+            conny_settings,
+            app_settings,
+        };
+    }
+
+    pub fn create_user_config(
+        user_name: String,
+        personality: String,
+        run_on_startup: bool,
+        constant_watch: bool,
+    ) -> UserConfig {
+        let user_data = UserData { user_name };
+        let conny_settings = ConnyConfig { personality };
+        let app_settings = AppSettings {
+            run_on_startup,
+            constant_watch,
+        };
+
+        return UserConfig {
+            user_data,
+            conny_settings,
+            app_settings,
+        };
+    }
+
+    /////////////// User Functions
+
+    pub async fn get_user_details() -> UserConfig {
+        let data: JsValue = invoke("get_user", to_value("").unwrap()).await;
+        let config_value: String = convert_js_value_to_string(data);
+        let config: UserConfig = serde_json::from_str(&config_value).unwrap();
+        return config;
+    }
+
+    pub async fn update_user_details(update_details: UserConfig) {
         let args: JsValue = to_value(&update_details).unwrap();
         println!("Args: {:?}", &args);
+        let _data: JsValue = invoke("update_user", args).await;
+    }
 
-        // let mut params = HashMap::new();
-        // params.insert("id", serde_wasm_bindgen::to_value(&id));
-        // params.insert("new_details", serde_wasm_bindgen::to_value(&new_details));
-        // let args: JsValue = serde_wasm_bindgen::to_value(&params).unwrap();
-
-        let _data: JsValue = invoke("update_user_details", args).await;
+    pub async fn reset_user_details() {
+        invoke("reset_user", to_value("").unwrap()).await;
     }
 }

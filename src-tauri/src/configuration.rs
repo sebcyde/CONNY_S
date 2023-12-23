@@ -16,7 +16,7 @@ pub mod config {
     #[derive(Serialize, Deserialize)]
     pub struct AppSettings {
         pub run_on_startup: bool,
-        pub keep_watch: bool,
+        pub constant_watch: bool,
     }
 
     #[derive(Serialize, Deserialize)]
@@ -31,26 +31,30 @@ pub mod config {
         pub app_settings: AppSettings,
     }
 
+    pub fn get_default_user_config() -> UserConfig {
+        let user_data: UserData = UserData {
+            user_name: String::from("Default_User"),
+        };
+        let conny_settings: ConnyConfig = ConnyConfig {
+            personality: String::from("Standard"),
+        };
+        let app_settings: AppSettings = AppSettings {
+            run_on_startup: false,
+            constant_watch: false,
+        };
+
+        return UserConfig {
+            user_data,
+            conny_settings,
+            app_settings,
+        };
+    }
+
     async fn set_default_config_files() {
         std::fs::create_dir_all(&get_config_root()).unwrap();
         let config_path: PathBuf = get_config_file();
         let mut config_file: File = File::create(&config_path).unwrap();
-
-        // Default User Settings
-        let user_config: UserConfig = UserConfig {
-            user_data: UserData {
-                user_name: String::from("Default User"),
-            },
-            app_settings: AppSettings {
-                run_on_startup: false,
-                keep_watch: false,
-            },
-            conny_settings: ConnyConfig {
-                personality: String::from("Standard"),
-            },
-        };
-
-        let json_data: String = serde_json::to_string(&user_config).unwrap();
+        let json_data: String = serde_json::to_string(&get_default_user_config()).unwrap();
         _ = config_file.write_all(json_data.as_bytes());
     }
 
@@ -69,10 +73,15 @@ pub mod config {
         if !Path::new(&user_config_dir_path).exists() {
             set_default_config_files().await;
         }
-
         let config_path: PathBuf = get_config_file();
         let mut config_file: File = File::create(&config_path).unwrap();
         let json_data: String = serde_json::to_string(&user_config).unwrap();
         _ = config_file.write_all(json_data.as_bytes());
+    }
+
+    pub async fn reset_config_files() {
+        let user_config_dir_path: PathBuf = get_config_root();
+        std::fs::remove_dir_all(&user_config_dir_path).unwrap();
+        set_default_config_files().await;
     }
 }

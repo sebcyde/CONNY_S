@@ -54,11 +54,15 @@ body,
 body > div {
 	flex-direction: column;
 	justify-content: center;
+	height: fit-content;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	min-height: 100%;
+	padding: 2em 0px;
 	margin: 0 auto;
 	display: flex;
-	height: 100%;
 	width: 80%;
-
+	overflow: overlay;
 	h2 {
 		text-align: center;
 	}
@@ -84,6 +88,10 @@ a {
 	font-size: 18px;
 	text-shadow: 0 1px 0 rgb(0 0 0 / 40%);
 	transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+	&.ResetButton {
+		background: radial-gradient(100% 100% at 100% 0%, #ff89e1 0%, #fc2c2c 100%);
+	}
 }
 
 button:hover,
@@ -91,7 +99,11 @@ a:hover {
 	box-shadow: 0px 4px 8px rgb(45 35 66 / 40%),
 		0px 7px 13px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #3c4fe0;
 	transform: translateY(-2px);
-	background-color: green;
+
+	&.ResetButton {
+		box-shadow: 0px 4px 8px rgb(45 35 66 / 40%),
+			0px 7px 13px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #722626;
+	}
 }
 
 button:active,
@@ -121,10 +133,35 @@ a {
 	}
 
 	form {
-		input {
-			width: 100%;
-			padding: 10px;
-			margin-top: 15px;
+		div {
+			height: fit-content;
+
+			h2 {
+				padding: 20px 0px 10px;
+				text-align: start;
+				width: 100%;
+				margin: 0px;
+			}
+
+			input {
+				height: 95%;
+			}
+			.FormRow {
+				justify-content: space-between;
+				align-content: center;
+				padding: 5px 0px;
+				display: flex;
+				width: 100%;
+
+				p {
+					margin: 0px;
+				}
+
+				/* &:nth-of-type(2n) {
+					background-color: #89e5ff6b;
+					color: #3a0ca3;
+				} */
+			}
 		}
 	}
 }

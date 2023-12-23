@@ -1,10 +1,9 @@
 use leptos::*;
-use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
 
 use crate::helpers::{
     self,
-    functions::{AppSettings, ConnyConfig, UpdateParams, UserConfig, UserData},
+    functions::{get_default_user_config, UserConfig},
 };
 
 #[wasm_bindgen]
@@ -16,80 +15,77 @@ extern "C" {
 #[component]
 pub fn Settings() -> impl IntoView {
     let (is_saving, set_is_saving) = create_signal(false);
+    let (user_data, set_user_data) = create_signal(get_default_user_config());
+
+    spawn_local(async move {
+        let config: UserConfig = helpers::functions::get_user_details().await;
+        set_user_data.set(config);
+    });
 
     let saving_text = move || match is_saving.get() {
         true => "Saving...",
         false => "Save",
     };
 
-    let (all_user_data, set_all_user_data) = create_signal(String::new());
-
-    let (config, set_config) = create_signal(JsValue::NULL);
-
-    let get_users = move |_| {
+    let reset_user = move |_| {
         spawn_local(async move {
-            let json_string: String = helpers::functions::get_users_data().await;
-            set_all_user_data.set(json_string.as_str().to_owned());
-        });
+            helpers::functions::reset_user_details().await;
+        })
     };
 
     let update_user = move |_| {
         spawn_local(async move {
-            let user_data = UserData {
-                user_name: "-NmElTd5XLZfwDZF7WPh".to_string(), // Placeholder user name
-            };
-
-            let app_settings = AppSettings {
-                run_on_startup: true, // Placeholder values for AppSettings
-                keep_watch: false,
-            };
-
-            let conny_config = ConnyConfig {
-                personality: "Friendly".to_string(), // Placeholder personality
-            };
-
-            let user_config = UserConfig {
-                user_data,
-                conny_settings: conny_config,
-                app_settings,
-            };
-
-            let update_params = UpdateParams {
-                id: "user_id_here".to_string(), // Placeholder user ID
-                new_details: user_config,
-            };
-
-            helpers::functions::update_user(update_params).await;
-            // set_all_user_data.set(json_string.as_str().to_owned());
+            // let new_config: UserConfig = create_user_config();
+            // helpers::functions::update_user_details(new_config).await;
+            let config: UserConfig = helpers::functions::get_user_details().await;
+            set_user_data.set(config);
         });
     };
 
     view! {
-    <div class="settings_page">
-            <h2 class="PageTitle">"Settings"</h2>
+      <div class="settings_page">
+        <form>
+          <div>
+            <h2>"User Settings"</h2>
+            <span class="FormRow">
+              <p>"Current User:"</p>
+              <input placeholder={move || user_data.get().user_data.user_name.to_string()}/>
+            </span>
+          </div>
 
-            <p>{all_user_data}</p>
+          <div>
+            <h2>"App Settings"</h2>
+            <span class="FormRow">
+              <p>"Run On Startup:"</p>
+              <input type="checkbox" checked={move || user_data.get().app_settings.run_on_startup}/>
+            </span>
 
-            <form>
-            // User Settings
-            <input placeholder="User Name"/>
-            <input placeholder="User Role"/>
+            <span class="FormRow">
+              <p>"Sort Files By Date:"</p>
+              <input type="checkbox" checked={move || user_data.get().app_settings.run_on_startup.to_string()}/>
+            </span>
 
-            // App Settings
-            <input placeholder="Run on startup?"/>
-            <input placeholder="File by date?"/>
+            <span class="FormRow">
+              <p>"Persistent Sort:"</p>
+              <input type="checkbox" checked={move || user_data.get().app_settings.constant_watch.to_string()}/>
+            </span>
+          </div>
+
+          <div>
+            <h2>"Conny Settings"</h2>
+            <span class="FormRow">
+              <p>"Personality Type:"</p>
+              <input placeholder={move || user_data.get().conny_settings.personality.to_string()}/>
+            </span>
+          </div>
 
 
-            // Conny Settings
-            <input placeholder="Personality type"/>
-            <input placeholder="User Name"/>
+        </form>
 
-            <button on:click=update_user>{saving_text}</button>
-            <button on:click=get_users>"get_existing_user"</button>
+        <button on:click=update_user>{saving_text}</button>
+        <a href="/">"Back to Home"</a>
+        <button class="ResetButton" on:click=reset_user>"Reset Settings"</button>
 
-            </form>
-            <a href="/">"Back to Home"</a>
-
-        </div>
+      </div>
     }
 }
