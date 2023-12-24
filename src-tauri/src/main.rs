@@ -4,13 +4,16 @@
 // mod auth;
 mod chatbot;
 mod configuration;
-mod get_dirs;
-mod get_input;
+mod functions;
 mod monitoring;
 mod notifications;
 mod sorting;
+mod updates;
 
 use configuration::config::{get_config_data, reset_config_files, update_config_files, UserConfig};
+
+use crate::notifications::notifications::send_notif;
+use crate::sorting::autosorter::sort_once;
 
 ////// Cloud Commands
 // TODO - SWAP OUT OLD USER FOR ACTUAL USER STRUCT
@@ -42,36 +45,45 @@ use configuration::config::{get_config_data, reset_config_files, update_config_f
 
 #[tauri::command]
 async fn update_user(new_details: UserConfig) {
-    println!("IN UPDATE FN");
     update_config_files(new_details).await;
-    println!("POST UPDATE FN");
+    send_notif("User setting update succesful.");
 }
 
 #[tauri::command]
 async fn reset_user() {
-    println!("IN RESET FN");
     reset_config_files().await;
-    println!("POST RESET FN");
+    send_notif("User setting reset succesful.");
 }
 
 #[tauri::command]
 async fn get_user() -> UserConfig {
-    return get_config_data().await;
+    println!("Fetching User Data");
+    let data: UserConfig = get_config_data().await;
+    println!("User Name: {:?}", &data.user_data.user_name);
+    return data;
 }
 
 ////////////////// System Commands
 
 #[tauri::command]
 async fn clean_dirs() {
-    println!("CLEANING DIRS");
-    // TODO - ADD IN CLEANING
-    std::thread::sleep(std::time::Duration::from_secs(3));
-    println!("Cleaning Complete.");
+    sort_once();
+    send_notif("Sorting Complete");
 }
+
+#[tauri::command]
+async fn console_print(content: String) {
+    println!("Inside Console Print");
+    println!("{}", &content);
+    // send_notif("Sorting Complete");
+}
+
+////////////////// Main
 
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
+            console_print,
             update_user,
             get_user,
             reset_user,

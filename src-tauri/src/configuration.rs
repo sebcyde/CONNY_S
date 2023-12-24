@@ -2,7 +2,7 @@ pub mod config {
 
     use serde::{Deserialize, Serialize};
 
-    use crate::get_dirs::get_dirs::{get_config_file, get_config_root};
+    use crate::functions::directories::{get_config_file, get_config_root};
     use std::fs::read_to_string;
     use std::fs::File;
     use std::io::Write;

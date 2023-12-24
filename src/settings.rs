@@ -89,3 +89,19 @@ pub fn Settings() -> impl IntoView {
       </div>
     }
 }
+
+// view! {
+//   <input
+//   type="text"
+//   class= "new-todo"
+//   autofocus=true
+//   placeholder="Add todo"
+//   on:keydown= move |event| {
+//       if event.key() == "Enter" && !event_target_value(&event).is_empty() {
+//           let input_value = event_target_value(&event);
+//           let new_todo_item = TodoItem { id: new_todo_id(), content: input_value.clone() };
+//           set_new_todo.update(|todo| todo.push(new_todo_item));
+//           set_default_value.set("");
+//       }}
+//       prop:value=default_value
+//   />

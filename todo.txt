@@ -1,0 +1,9 @@
+-- SORTING
+- set up continuous sort functionality
+
+-- MONITORING
+- Set up monitoring
+
+-- CHATBOT
+- set up chatbot
+

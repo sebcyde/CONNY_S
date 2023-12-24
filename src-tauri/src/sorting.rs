@@ -1,6 +1,6 @@
 pub mod autosorter {
 
-    use crate::get_dirs::get_dirs::get_conny_directory;
+    use crate::functions::directories::get_conny_directory;
     use std::path::{Path, PathBuf};
 
     pub async fn create_sorting_folders() {
@@ -27,5 +27,11 @@ pub mod autosorter {
                 _ = std::fs::create_dir_all(&current_dir);
             }
         }
+    }
+
+    pub fn sort_continuous() {}
+
+    pub fn sort_once() {
+        std::thread::sleep(std::time::Duration::from_secs(3));
     }
 }

@@ -1,5 +1,4 @@
 use leptos::*;
-use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

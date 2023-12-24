@@ -37,7 +37,7 @@ Conny-S is an AI-powered Tauri application that simplifies file organization, ba
 ## Usage
 
 1. Run the application.
-2. Use the intuitive UI to access different functionalities.
+2. Use the intuitive UI to access different functionalitiebs.
 3. Explore the AutoSort feature, backup creation, chatbot interaction, and personalize settings as needed.
 
 ## Contributions

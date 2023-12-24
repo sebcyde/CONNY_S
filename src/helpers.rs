@@ -1,12 +1,9 @@
 pub mod functions {
 
-    use std::{collections::HashMap, fs::read_to_string};
-
-    use leptos::*;
+    use leptos::{leptos_dom::logging::console_log, *};
     use serde::{Deserialize, Serialize};
-    use serde_json::to_string_pretty;
+    use serde_wasm_bindgen::from_value;
     use serde_wasm_bindgen::to_value;
-    use tauri_sys::tauri;
     use wasm_bindgen::prelude::*;
 
     #[wasm_bindgen]
@@ -62,7 +59,7 @@ pub mod functions {
         };
     }
 
-    pub fn create_user_config(
+    pub fn _create_user_config(
         user_name: String,
         personality: String,
         run_on_startup: bool,
@@ -86,18 +83,19 @@ pub mod functions {
 
     pub async fn get_user_details() -> UserConfig {
         let data: JsValue = invoke("get_user", to_value("").unwrap()).await;
-        let config_value: String = convert_js_value_to_string(data);
-        let config: UserConfig = serde_json::from_str(&config_value).unwrap();
-        return config;
+        return from_value(data).unwrap();
     }
 
-    pub async fn update_user_details(update_details: UserConfig) {
+    pub async fn _update_user_details(update_details: UserConfig) {
         let args: JsValue = to_value(&update_details).unwrap();
-        println!("Args: {:?}", &args);
         let _data: JsValue = invoke("update_user", args).await;
     }
 
     pub async fn reset_user_details() {
         invoke("reset_user", to_value("").unwrap()).await;
+    }
+
+    pub async fn print_to_console(content: String) {
+        invoke("console_print", to_value(&content).unwrap()).await;
     }
 }
