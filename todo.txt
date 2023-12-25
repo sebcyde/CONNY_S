@@ -7,3 +7,5 @@
 -- CHATBOT
 - set up chatbot
 
+-- DB Backup
+- Backup using 'where'

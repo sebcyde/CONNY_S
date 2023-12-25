@@ -53,10 +53,11 @@ pub fn Home() -> impl IntoView {
 
             <div class="MainMenu">
                 <a href="/Chat">"Chat"</a>
-                <button disabled=constant_sort.get() on:click=sort_files>{sorting_text}</button>
+                <button disabled=move || constant_sort.get() on:click=sort_files>{sorting_text}</button>
+                <a href="/Backups">"Backups"</a>
                 <a href="/Settings">"Settings"</a>
                 <a href="/Upcoming">"Upcoming Features"</a>
-                <a href="/Other">"Testing Not Found Link"</a>
+                // <a href="/Other">"Testing Not Found Link"</a>
             </div>
         </div>
     }

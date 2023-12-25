@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 // mod auth;
+mod backup;
 mod chatbot;
 mod configuration;
 mod functions;
@@ -16,6 +17,7 @@ use configuration::config::{
 };
 use serde_json::{from_value, Value};
 
+use crate::backup::backup::*;
 use crate::notifications::notifications::send_notif;
 use crate::sorting::autosorter::sort_once;
 
@@ -80,11 +82,19 @@ async fn clean_dirs() {
     send_notif("Sorting Complete");
 }
 
+#[tauri::command]
+async fn backup_all() {
+    println!("Backing up all");
+    backup_all_databases().await;
+    send_notif("Backup Complete");
+}
+
 ////////////////// Main
 
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
+            backup_all,
             update_user,
             get_user,
             reset_user,

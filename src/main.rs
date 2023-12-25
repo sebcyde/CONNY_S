@@ -1,4 +1,5 @@
 mod app;
+mod backups;
 mod chat;
 mod helpers;
 mod not_found;
@@ -9,6 +10,7 @@ use app::*;
 use leptos::*;
 use leptos_router::*;
 
+use crate::backups::Backups;
 use crate::chat::Chat;
 use crate::not_found::NotFound;
 use crate::settings::Settings;
@@ -23,6 +25,7 @@ fn main() {
                     <Route path="/Chat" view=Chat/>
                     <Route path="/Settings" view=Settings/>
                     <Route path="/Upcoming" view=Upcoming/>
+                    <Route path="/Backups" view=Backups/>
                     <Route path="/*any" view=NotFound/>
                 </Routes>
             </Router>
