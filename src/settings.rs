@@ -1,9 +1,12 @@
-use leptos::*;
+use leptos::{leptos_dom::logging::console_log, *};
 use wasm_bindgen::prelude::*;
 
 use crate::helpers::{
     self,
-    functions::{get_default_user_config, UserConfig},
+    functions::{
+        get_default_user_config, get_user_details, update_user_details, AppSettings, ConnyConfig,
+        UserConfig, UserData,
+    },
 };
 
 #[wasm_bindgen]
@@ -14,31 +17,74 @@ extern "C" {
 
 #[component]
 pub fn Settings() -> impl IntoView {
-    let (is_saving, set_is_saving) = create_signal(false);
+    let (is_resetting, set_is_resetting) = create_signal(false);
+    let (is_saving, set_is_saving) = create_signal(0);
+
+    // Input state
+
     let (user_data, set_user_data) = create_signal(get_default_user_config());
+
+    let (name, set_name) = create_signal(user_data.get().user_data.user_name);
+
+    let (run_on_startup, set_run_on_startup) =
+        create_signal(user_data.get().app_settings.run_on_startup);
+
+    let (persistent_sort, set_persistent_sort) =
+        create_signal(user_data.get().app_settings.constant_watch);
+
+    let (personality, set_personality) = create_signal(user_data.get().conny_settings.personality);
+
+    // Functions
 
     spawn_local(async move {
         let config: UserConfig = helpers::functions::get_user_details().await;
+        let content: String = format!("{:?}", config.ser().unwrap());
+        console_log(&content);
         set_user_data.set(config);
     });
 
+    let resetting_text = move || match is_resetting.get() {
+        true => "Resetting...",
+        false => "Reset Settings",
+    };
+
     let saving_text = move || match is_saving.get() {
-        true => "Saving...",
-        false => "Save",
+        0 => "Save",
+        1 => "Saving...",
+        _ => "Save Succesful",
     };
 
     let reset_user = move |_| {
         spawn_local(async move {
+            set_is_resetting.set(true);
             helpers::functions::reset_user_details().await;
+            set_is_resetting.set(false);
         })
     };
 
     let update_user = move |_| {
         spawn_local(async move {
-            // let new_config: UserConfig = create_user_config();
-            // helpers::functions::update_user_details(new_config).await;
-            let config: UserConfig = helpers::functions::get_user_details().await;
+            set_is_saving.set(1);
+            let new_config: UserConfig = UserConfig {
+                app_settings: AppSettings {
+                    constant_watch: (move || persistent_sort.get_untracked())(),
+                    run_on_startup: (move || run_on_startup.get_untracked())(),
+                },
+                conny_settings: ConnyConfig {
+                    personality: (move || personality.get_untracked())(),
+                },
+                user_data: UserData {
+                    user_name: (move || name.get_untracked())(),
+                },
+            };
+
+            update_user_details(new_config).await;
+            let config: UserConfig = get_user_details().await;
+            let content: String = format!("{:?}", config.ser().unwrap());
+            console_log(&content);
+
             set_user_data.set(config);
+            set_is_saving.set(3);
         });
     };
 
@@ -48,8 +94,11 @@ pub fn Settings() -> impl IntoView {
           <div>
             <h2>"User Settings"</h2>
             <span class="FormRow">
-              <p>"Current User:"</p>
-              <input placeholder={move || user_data.get().user_data.user_name.to_string()}/>
+              <p>"User Name:"</p>
+              <input
+                on:input=move |ev| { set_name.set(event_target_value(&ev)); }
+                prop:value=move || name.get()
+              />
             </span>
           </div>
 
@@ -57,17 +106,25 @@ pub fn Settings() -> impl IntoView {
             <h2>"App Settings"</h2>
             <span class="FormRow">
               <p>"Run On Startup:"</p>
-              <input type="checkbox" checked={move || user_data.get().app_settings.run_on_startup}/>
+              <input
+              type="checkbox"
+                on:change=move |ev| { set_run_on_startup.set(event_target_checked(&ev)); }
+                prop:value=move || run_on_startup.get()
+              />
             </span>
 
-            <span class="FormRow">
-              <p>"Sort Files By Date:"</p>
-              <input type="checkbox" checked={move || user_data.get().app_settings.run_on_startup.to_string()}/>
-            </span>
+            // <span class="FormRow">
+            //   <p>"Sort Files By Date:"</p>
+            //   <input type="checkbox" checked={move || user_data.get().app_settings.run_on_startup.to_string()}/>
+            // </span>
 
             <span class="FormRow">
-              <p>"Persistent Sort:"</p>
-              <input type="checkbox" checked={move || user_data.get().app_settings.constant_watch.to_string()}/>
+              <p>"Constant File Sort:"</p>
+              <input
+                type="checkbox"
+                on:change=move |ev| { set_persistent_sort.set(event_target_checked(&ev)); }
+                prop:value=move || persistent_sort.get()
+              />
             </span>
           </div>
 
@@ -75,7 +132,10 @@ pub fn Settings() -> impl IntoView {
             <h2>"Conny Settings"</h2>
             <span class="FormRow">
               <p>"Personality Type:"</p>
-              <input placeholder={move || user_data.get().conny_settings.personality.to_string()}/>
+              <input
+                on:input=move |ev| { set_personality.set(event_target_value(&ev)); }
+                prop:value=move || personality.get()
+              />
             </span>
           </div>
 
@@ -84,7 +144,7 @@ pub fn Settings() -> impl IntoView {
 
         <button on:click=update_user>{saving_text}</button>
         <a href="/">"Back to Home"</a>
-        <button class="ResetButton" on:click=reset_user>"Reset Settings"</button>
+        <button class="ResetButton" on:click=reset_user>{resetting_text}</button>
 
       </div>
     }

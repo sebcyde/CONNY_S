@@ -10,7 +10,11 @@ mod notifications;
 mod sorting;
 mod updates;
 
-use configuration::config::{get_config_data, reset_config_files, update_config_files, UserConfig};
+use configuration::config::{
+    get_config_data, reset_config_files, update_config_files, AppSettings, ConnyConfig, UserConfig,
+    UserData,
+};
+use serde_json::{from_value, Value};
 
 use crate::notifications::notifications::send_notif;
 use crate::sorting::autosorter::sort_once;
@@ -44,8 +48,14 @@ use crate::sorting::autosorter::sort_once;
 ////////////////// User Commands
 
 #[tauri::command]
-async fn update_user(new_details: UserConfig) {
-    update_config_files(new_details).await;
+async fn update_user(userData: UserData, appSettings: AppSettings, connySettings: ConnyConfig) {
+    println!("Received UserConfig in update_user function");
+    let user_config: UserConfig = UserConfig {
+        app_settings: appSettings,
+        conny_settings: connySettings,
+        user_data: userData,
+    };
+    update_config_files(user_config).await;
     send_notif("User setting update succesful.");
 }
 
@@ -58,9 +68,7 @@ async fn reset_user() {
 #[tauri::command]
 async fn get_user() -> UserConfig {
     println!("Fetching User Data");
-    let data: UserConfig = get_config_data().await;
-    println!("User Name: {:?}", &data.user_data.user_name);
-    return data;
+    return get_config_data().await;
 }
 
 ////////////////// System Commands
@@ -71,19 +79,11 @@ async fn clean_dirs() {
     send_notif("Sorting Complete");
 }
 
-#[tauri::command]
-async fn console_print(content: String) {
-    println!("Inside Console Print");
-    println!("{}", &content);
-    // send_notif("Sorting Complete");
-}
-
 ////////////////// Main
 
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            console_print,
             update_user,
             get_user,
             reset_user,

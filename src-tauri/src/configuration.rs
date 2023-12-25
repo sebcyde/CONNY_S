@@ -8,23 +8,23 @@ pub mod config {
     use std::io::Write;
     use std::path::{Path, PathBuf};
 
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize, Debug)]
     pub struct UserData {
         pub user_name: String,
     }
 
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize, Debug)]
     pub struct AppSettings {
         pub run_on_startup: bool,
         pub constant_watch: bool,
     }
 
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize, Debug)]
     pub struct ConnyConfig {
         pub personality: String, // Personality Enum
     }
 
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize, Debug)]
     pub struct UserConfig {
         pub user_data: UserData,
         pub conny_settings: ConnyConfig,
@@ -33,7 +33,7 @@ pub mod config {
 
     pub fn get_default_user_config() -> UserConfig {
         let user_data: UserData = UserData {
-            user_name: String::from("Default_User"),
+            user_name: String::from("R_Default_User"),
         };
         let conny_settings: ConnyConfig = ConnyConfig {
             personality: String::from("Standard"),

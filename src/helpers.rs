@@ -12,22 +12,22 @@ pub mod functions {
         async fn invoke(cmd: &str, args: JsValue) -> JsValue;
     }
 
-    #[derive(Serialize, Deserialize, Clone)]
+    #[derive(Serialize, Deserialize, Clone, Debug)]
     pub struct UserData {
         pub user_name: String,
     }
 
-    #[derive(Serialize, Deserialize, Clone)]
+    #[derive(Serialize, Deserialize, Clone, Debug)]
     pub struct AppSettings {
         pub run_on_startup: bool,
         pub constant_watch: bool,
     }
 
-    #[derive(Serialize, Deserialize, Clone)]
+    #[derive(Serialize, Deserialize, Clone, Debug)]
     pub struct ConnyConfig {
         pub personality: String,
     }
-    #[derive(Serialize, Deserialize, Clone)]
+    #[derive(Serialize, Deserialize, Clone, Debug)]
     pub struct UserConfig {
         pub user_data: UserData,
         pub conny_settings: ConnyConfig,
@@ -86,16 +86,49 @@ pub mod functions {
         return from_value(data).unwrap();
     }
 
-    pub async fn _update_user_details(update_details: UserConfig) {
-        let args: JsValue = to_value(&update_details).unwrap();
-        let _data: JsValue = invoke("update_user", args).await;
+    #[derive(Serialize, Deserialize, Debug)]
+    struct DataArgs<'a> {
+        newDetails: &'a str,
+    }
+
+    /////////////// PARAMETER V? Functions
+    #[derive(Serialize, Deserialize, Clone, Debug)]
+    pub struct ParamUserData {
+        pub user_name: String,
+    }
+
+    #[derive(Serialize, Deserialize, Clone, Debug)]
+    pub struct ParamAppSettings {
+        pub run_on_startup: bool,
+        pub constant_watch: bool,
+    }
+
+    #[derive(Serialize, Deserialize, Clone, Debug)]
+    pub struct ParamConnyConfig {
+        pub personality: String,
+    }
+    #[derive(Serialize, Deserialize, Clone, Debug)]
+    pub struct ParamUserConfig {
+        // NEEDS TO BE CAMELCASE
+        pub userData: UserData,
+        pub connySettings: ConnyConfig,
+        pub appSettings: AppSettings,
+    }
+
+    pub async fn update_user_details(update_details: UserConfig) {
+        invoke(
+            "update_user",
+            to_value(&ParamUserConfig {
+                userData: update_details.user_data,
+                appSettings: update_details.app_settings,
+                connySettings: update_details.conny_settings,
+            })
+            .unwrap(),
+        )
+        .await;
     }
 
     pub async fn reset_user_details() {
         invoke("reset_user", to_value("").unwrap()).await;
-    }
-
-    pub async fn print_to_console(content: String) {
-        invoke("console_print", to_value(&content).unwrap()).await;
     }
 }
