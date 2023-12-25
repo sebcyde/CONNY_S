@@ -36,11 +36,13 @@ pub fn Settings() -> impl IntoView {
 
     // Functions
 
-    spawn_local(async move {
-        let config: UserConfig = helpers::functions::get_user_details().await;
-        let content: String = format!("{:?}", config.ser().unwrap());
-        console_log(&content);
-        set_user_data.set(config);
+    create_effect(move |_| {
+        spawn_local(async move {
+            let config: UserConfig = helpers::functions::get_user_details().await;
+            let content: String = format!("{:?}", config.ser().unwrap());
+            console_log(&content);
+            set_user_data.set(config);
+        });
     });
 
     let resetting_text = move || match is_resetting.get() {

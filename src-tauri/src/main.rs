@@ -75,6 +75,7 @@ async fn get_user() -> UserConfig {
 
 #[tauri::command]
 async fn clean_dirs() {
+    println!("Sorting Files");
     sort_once();
     send_notif("Sorting Complete");
 }
