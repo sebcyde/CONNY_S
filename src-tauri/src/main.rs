@@ -12,10 +12,9 @@ mod sorting;
 mod updates;
 
 use configuration::config::{
-    get_config_data, reset_config_files, update_config_files, AppSettings, ConnyConfig, UserConfig,
-    UserData,
+    get_config_data, reset_config_files, update_config_files, AppSettings, ConnyConfig,
+    SortSettings, UserConfig, UserData,
 };
-use serde_json::{from_value, Value};
 
 use crate::backup::backup::*;
 use crate::notifications::notifications::send_notif;
@@ -50,12 +49,18 @@ use crate::sorting::autosorter::sort_once;
 ////////////////// User Commands
 
 #[tauri::command]
-async fn update_user(userData: UserData, appSettings: AppSettings, connySettings: ConnyConfig) {
+async fn update_user(
+    userData: UserData,
+    sortSettings: SortSettings,
+    appSettings: AppSettings,
+    connySettings: ConnyConfig,
+) {
     println!("Received UserConfig in update_user function");
     let user_config: UserConfig = UserConfig {
         app_settings: appSettings,
         conny_settings: connySettings,
         user_data: userData,
+        sort_settings: sortSettings,
     };
     update_config_files(user_config).await;
     send_notif("User setting update succesful.");

@@ -20,6 +20,13 @@ pub mod config {
     }
 
     #[derive(Serialize, Deserialize, Debug)]
+    pub struct SortSettings {
+        pub flight_club_uk_location: String,
+        pub electric_shuffle_uk_location: String,
+        pub red_engine_uk_location: String,
+    }
+
+    #[derive(Serialize, Deserialize, Debug)]
     pub struct ConnyConfig {
         pub personality: String, // Personality Enum
     }
@@ -29,6 +36,7 @@ pub mod config {
         pub user_data: UserData,
         pub conny_settings: ConnyConfig,
         pub app_settings: AppSettings,
+        pub sort_settings: SortSettings,
     }
 
     pub fn get_default_user_config() -> UserConfig {
@@ -42,11 +50,17 @@ pub mod config {
             run_on_startup: false,
             constant_watch: false,
         };
+        let sort_settings: SortSettings = SortSettings {
+            flight_club_uk_location: String::new(),
+            electric_shuffle_uk_location: String::new(),
+            red_engine_uk_location: String::new(),
+        };
 
         return UserConfig {
             user_data,
             conny_settings,
             app_settings,
+            sort_settings,
         };
     }
 

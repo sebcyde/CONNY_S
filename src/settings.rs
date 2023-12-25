@@ -5,7 +5,7 @@ use crate::helpers::{
     self,
     functions::{
         get_default_user_config, get_user_details, update_user_details, AppSettings, ConnyConfig,
-        UserConfig, UserData,
+        SortSettings, UserConfig, UserData,
     },
 };
 
@@ -77,6 +77,14 @@ pub fn Settings() -> impl IntoView {
                 },
                 user_data: UserData {
                     user_name: (move || name.get_untracked())(),
+                },
+                sort_settings: SortSettings {
+                    electric_shuffle_uk_location: user_data
+                        .get()
+                        .sort_settings
+                        .electric_shuffle_uk_location,
+                    flight_club_uk_location: user_data.get().sort_settings.flight_club_uk_location,
+                    red_engine_uk_location: user_data.get().sort_settings.red_engine_uk_location,
                 },
             };
 

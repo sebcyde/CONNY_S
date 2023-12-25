@@ -1,5 +1,6 @@
 -- SORTING
 - set up continuous sort functionality
+- multithreading for BOTH sort modes
 
 -- MONITORING
 - Set up monitoring
@@ -9,3 +10,6 @@
 
 -- DB Backup
 - Backup using 'where'
+- Save found locations to config filesystem-- update UserConfig Struct
+
+-- 

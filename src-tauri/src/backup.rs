@@ -2,14 +2,17 @@ pub mod backup {
     use std::process::{Command, Output};
     use walkdir::WalkDir;
 
-    use crate::functions::directories::get_documents_dir;
+    use crate::{
+        configuration::config::{get_config_data, UserConfig},
+        functions::directories::get_documents_dir,
+    };
 
     fn find_file_by_name(name: &str) -> Option<String> {
         let root_docs_dir = get_documents_dir();
         for entry in WalkDir::new(root_docs_dir.to_str().unwrap()) {
             if let Ok(entry) = entry {
                 if let Some(file_name) = entry.file_name().to_str() {
-                    println!("Current File: {}", file_name);
+                    println!("Current File: {}", entry.path().display().to_string());
                     if file_name == name {
                         return Some(entry.path().display().to_string());
                     }
@@ -49,5 +52,10 @@ pub mod backup {
         // WRITE FOUND LOCATIONS TO CONFIG - WAY TOO INSTENSIVE SEARCH
     }
 
-    pub async fn backup_all_databases() {}
+    pub async fn backup_all_databases() {
+        let user_config: UserConfig = get_config_data().await;
+
+        // Add config arm for stored locations
+        // If not saved -> search
+    }
 }

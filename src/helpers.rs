@@ -27,11 +27,20 @@ pub mod functions {
     pub struct ConnyConfig {
         pub personality: String,
     }
+
+    #[derive(Serialize, Deserialize, Clone, Debug)]
+    pub struct SortSettings {
+        pub flight_club_uk_location: String,
+        pub electric_shuffle_uk_location: String,
+        pub red_engine_uk_location: String,
+    }
+
     #[derive(Serialize, Deserialize, Clone, Debug)]
     pub struct UserConfig {
         pub user_data: UserData,
         pub conny_settings: ConnyConfig,
         pub app_settings: AppSettings,
+        pub sort_settings: SortSettings,
     }
 
     /////////////// General Functions
@@ -51,11 +60,17 @@ pub mod functions {
             run_on_startup: false,
             constant_watch: false,
         };
+        let sort_settings: SortSettings = SortSettings {
+            flight_club_uk_location: String::new(),
+            electric_shuffle_uk_location: String::new(),
+            red_engine_uk_location: String::new(),
+        };
 
         return UserConfig {
             user_data,
             conny_settings,
             app_settings,
+            sort_settings,
         };
     }
 
@@ -71,11 +86,17 @@ pub mod functions {
             run_on_startup,
             constant_watch,
         };
+        let sort_settings: SortSettings = SortSettings {
+            electric_shuffle_uk_location: String::new(),
+            flight_club_uk_location: String::new(),
+            red_engine_uk_location: String::new(),
+        };
 
         return UserConfig {
             user_data,
             conny_settings,
             app_settings,
+            sort_settings,
         };
     }
 
@@ -107,12 +128,14 @@ pub mod functions {
     pub struct ParamConnyConfig {
         pub personality: String,
     }
+
     #[derive(Serialize, Deserialize, Clone, Debug)]
     pub struct ParamUserConfig {
         // NEEDS TO BE CAMELCASE
         pub userData: UserData,
         pub connySettings: ConnyConfig,
         pub appSettings: AppSettings,
+        pub sortSettings: SortSettings,
     }
 
     pub async fn update_user_details(update_details: UserConfig) {
@@ -122,6 +145,7 @@ pub mod functions {
                 userData: update_details.user_data,
                 appSettings: update_details.app_settings,
                 connySettings: update_details.conny_settings,
+                sortSettings: update_details.sort_settings,
             })
             .unwrap(),
         )
