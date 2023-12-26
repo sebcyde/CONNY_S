@@ -2,6 +2,8 @@ use leptos::*;
 use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
 
+use crate::helpers::{self, functions::UserConfig};
+
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "tauri"])]
@@ -38,6 +40,8 @@ pub fn Backups() -> impl IntoView {
     let BFC = move |_| {
         spawn_local(async move {
             set_is_FC.set(true);
+            // let config: UserConfig = helpers::functions::get_user_details().await;
+            // pull(config.sort_settings.flight_club_uk_location).await;
             // helpers::functions::reset_user_details().await;
             set_is_FC.set(false);
         })

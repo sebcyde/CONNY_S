@@ -39,24 +39,22 @@ pub fn Home() -> impl IntoView {
         true => "Persistent Sort Active",
         false => match is_sorting.get() {
             true => "Sorting...",
-            false => "Sort Files",
+            false => "Sort Local Files",
         },
     };
 
     view! {
         <div class="HomePage">
-            <div class="row">
-                <img src="public/tauri.svg" class="logo tauri" alt="Tauri logo"/>
-            </div>
 
-            <p>{move || welcome_text.get()}</p>
+            // <p>{move || welcome_text.get()}</p>
 
             <div class="MainMenu">
                 <a href="/Chat">"Chat"</a>
                 <button disabled=move || constant_sort.get() on:click=sort_files>{sorting_text}</button>
-                <a href="/Backups">"Backups"</a>
+                <a href="/Backups">"Backup Databases"</a>
+                <a href="/Updates">"Pull Repositories"</a>
                 <a href="/Settings">"Settings"</a>
-                <a href="/Upcoming">"Upcoming Features"</a>
+                // <a href="/Upcoming">"Upcoming Features"</a>
                 // <a href="/Other">"Testing Not Found Link"</a>
             </div>
         </div>

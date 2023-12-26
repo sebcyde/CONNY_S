@@ -3,7 +3,7 @@
 - multithreading for BOTH sort modes
 
 -- MONITORING
-- Set up monitoring
+- Set up pc monitoring
 
 -- CHATBOT
 - set up chatbot
@@ -12,4 +12,5 @@
 - Backup using 'where'
 - Save found locations to config filesystem-- update UserConfig Struct
 
--- 
+-- Notifs
+- Setup notifications

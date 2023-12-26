@@ -28,6 +28,14 @@ pub mod directories {
         return downloads_dir;
     }
 
+    pub fn get_database_backups_dir() -> PathBuf {
+        let mut backups_dir: PathBuf = get_conny_directory();
+        backups_dir.push("Database_Backups");
+        return backups_dir;
+    }
+
+    
+
     pub fn get_documents_dir() -> PathBuf {
         let mut documents_dir: PathBuf = home_dir().unwrap();
         documents_dir.push("Documents");

@@ -1,15 +1,25 @@
 html,
 body,
 :root {
-	background-image: url("./public/background_1.jpg");
-	background-attachment: fixed;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: cover;
-	overflow: hidden;
-	height: 100vh;
-	width: 100vw;
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	line-height: 24px;
+	font-weight: 400;
+	font-size: 16px;
+
+	background-color: #3a0ca3;
+	color: #caf0f8;
+
+	height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+	font-synthesis: none;
 	margin: 0px;
+	padding: 0px;
+
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
 }
 
 * {
@@ -25,9 +35,25 @@ body,
 	text-align: center;
 }
 
+.logo {
+	height: 8em;
+	padding: 1.5em;
+	will-change: filter;
+	transition: 0.75s;
+}
+
+.logo:hover {
+	filter: drop-shadow(0 0 2em #24c8db);
+}
+
+.row {
+	display: flex;
+	justify-content: center;
+}
+
 body > div {
 	flex-direction: column;
-	justify-content: end;
+	justify-content: center;
 	height: fit-content;
 	overflow-x: scroll;
 	overflow-y: hidden;
@@ -44,31 +70,28 @@ body > div {
 
 button,
 a {
-	background-color: rgba(255, 255, 255, 0.06);
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	text-decoration: none;
 	display: inline-block;
-	border-radius: 20px;
-	padding: 20px 32px;
+	outline: 0;
 	border: 0;
-	backdrop-filter: blur(30px);
-	color: rgba(255, 255, 255, 0.8);
-	font-size: 14px;
-	letter-spacing: 2px;
 	cursor: pointer;
-	text-transform: uppercase;
-	margin: 15px auto;
-	width: 80%;
+	margin-top: 20px;
+	will-change: box-shadow, transform;
+	background: radial-gradient(100% 100% at 100% 0%, #89e5ff 0%, #5468ff 100%);
+	box-shadow: 0px 2px 4px rgb(45 35 66 / 40%),
+		0px 7px 13px -3px rgb(45 35 66 / 30%),
+		inset 0px -3px 0px rgb(58 65 111 / 50%);
+	padding: 0 32px;
+	border-radius: 6px;
+	color: #fff;
+	height: 48px;
+	width: 100%;
+	font-size: 18px;
+	text-shadow: 0 1px 0 rgb(0 0 0 / 40%);
+	transition: box-shadow 0.15s ease, transform 0.15s ease;
 
 	&.ResetButton {
 		background: radial-gradient(100% 100% at 100% 0%, #ff89e1 0%, #fc2c2c 100%);
 	}
-
-	justify-content: center;
-	text-decoration: none;
-	align-items: center;
-	text-align: center;
-	display: flex;
 }
 
 button:hover,
@@ -81,16 +104,20 @@ a:hover {
 		box-shadow: 0px 4px 8px rgb(45 35 66 / 40%),
 			0px 7px 13px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #722626;
 	}
-
-	will-change: filter;
-	transition: 0.5s;
-	filter: drop-shadow(0 0 0.5em #352ef9);
 }
 
 button:active,
 a:active {
 	box-shadow: inset 0px 3px 7px #3c4fe0;
 	transform: translateY(2px);
+}
+
+a {
+	justify-content: center;
+	text-decoration: none;
+	align-items: center;
+	text-align: center;
+	display: flex;
 }
 
 .HomePage {

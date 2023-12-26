@@ -20,6 +20,7 @@ pub mod autosorter {
                 "Custom",
                 "Folders",
                 "Archive",
+                "Database_Backups"
             ];
             for type_str in supported_file_types {
                 let mut current_dir: PathBuf = user_files_dir_path.clone();

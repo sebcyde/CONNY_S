@@ -19,6 +19,7 @@ use configuration::config::{
 use crate::backup::backup::*;
 use crate::notifications::notifications::send_notif;
 use crate::sorting::autosorter::sort_once;
+use crate::updates::updates::{pull, pull_all};
 
 ////// Cloud Commands
 // TODO - SWAP OUT OLD USER FOR ACTUAL USER STRUCT
@@ -84,14 +85,30 @@ async fn get_user() -> UserConfig {
 async fn clean_dirs() {
     println!("Sorting Files");
     sort_once();
-    send_notif("Sorting Complete");
+    send_notif("Local file sorting complete.");
 }
 
 #[tauri::command]
 async fn backup_all() {
     println!("Backing up all");
     backup_all_databases().await;
-    send_notif("Backup Complete");
+    send_notif("All databases backed up.");
+}
+
+////////////////// Update Commands
+
+#[tauri::command]
+async fn pull_all_repos() {
+    println!("Pulling all repos");
+    pull_all().await;
+    send_notif("All repositories are now up to date.");
+}
+
+#[tauri::command]
+async fn pull_single_repo(path: String) {
+    println!("Pulling {}", &path);
+    pull(path).await;
+    send_notif("Repository update successful.");
 }
 
 ////////////////// Main
@@ -99,6 +116,8 @@ async fn backup_all() {
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
+            pull_all_repos,
+            pull_single_repo,
             backup_all,
             update_user,
             get_user,
