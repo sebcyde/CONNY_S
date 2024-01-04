@@ -72,15 +72,14 @@ pub fn Backups() -> impl IntoView {
     };
 
     view! {
-        <div class="BackupsPage">
-            // <h2 class="PageTitle">"Backups Page"</h2>
+            <div class="BackupsPage">
+                <h2 class="page_title">"Backup Databases"</h2>
 
-            <button on:click=BFC>{FC_text}</button>
-            <button on:click=BES>{ES_text}</button>
-            <button on:click=BRE>{RE_text}</button>
-            <button on:click=backup_all>{all_text}</button>
-
-            <a href="/">"Back to Home"</a>
-        </div>
+                    <button class="Themed-Button" on:click=BFC>{FC_text}</button>
+                    <button class="Themed-Button" on:click=BES>{ES_text}</button>
+                    <button class="Themed-Button" on:click=BRE>{RE_text}</button>
+                    <button class="Themed-Button" on:click=backup_all>{all_text}</button>
+                    <a class="Themed-Button" href="/">"Back to Home"</a>
+            </div>
     }
 }

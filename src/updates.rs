@@ -37,18 +37,18 @@ pub fn Updates() -> impl IntoView {
         false => "Red Engine",
     };
 
-    let all_text = move || match is_All.get() {
-        true => "Pulling All Repos...",
-        false => "Pull All Repos",
-    };
+    // let all_text = move || match is_All.get() {
+    //     true => "Pulling All Repos...",
+    //     false => "Pull All Repos",
+    // };
 
-    let update_all_repos = move |_| {
-        spawn_local(async move {
-            set_is_All.set(true);
-            invoke("pull_all_repos", to_value("").unwrap()).await;
-            set_is_All.set(false);
-        })
-    };
+    // let update_all_repos = move |_| {
+    //     spawn_local(async move {
+    //         set_is_All.set(true);
+    //         invoke("pull_all_repos", to_value("").unwrap()).await;
+    //         set_is_All.set(false);
+    //     })
+    // };
 
     let update_fc = move |_| {
         spawn_local(async move {
@@ -100,14 +100,18 @@ pub fn Updates() -> impl IntoView {
 
     view! {
         <div class="UpdatesPage">
-            <h2 class="PageTitle">"Pull Newest Codebase"</h2>
+            <h2 class="page_title">"Pull Newest Codebase"</h2>
 
-            <button on:click=update_fc>{FC_text}</button>
-            <button on:click=update_es>{ES_text}</button>
-            <button on:click=update_re>{RE_text}</button>
-            <button on:click=update_all_repos>{all_text}</button>
+                <button class="Themed-Button" on:click=update_fc>{FC_text}</button>
 
-            <a href="/">"Back to Home"</a>
-        </div>
+                <button class="Themed-Button" on:click=update_es>{ES_text}</button>
+
+                <button class="Themed-Button" on:click=update_re>{RE_text}</button>
+
+                // <button class="Themed-Button" on:click=update_all_repos>{all_text}</button>
+
+                <a class="Themed-Button" href="/">"Back to Home"</a>
+
+            </div>
     }
 }

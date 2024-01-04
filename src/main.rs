@@ -2,6 +2,7 @@ mod app;
 mod backups;
 mod chat;
 mod helpers;
+mod loading;
 mod not_found;
 mod settings;
 mod upcoming;
@@ -13,6 +14,7 @@ use leptos_router::*;
 
 use crate::backups::Backups;
 use crate::chat::Chat;
+use crate::loading::Loading;
 use crate::not_found::NotFound;
 use crate::settings::Settings;
 use crate::upcoming::Upcoming;
@@ -23,7 +25,8 @@ fn main() {
         view! {
             <Router>
                 <Routes>
-                    <Route path="/" view=Home ssr=SsrMode::Async/>
+                    <Route path="/" view=Loading />
+                    <Route path="/App" view=Home ssr=SsrMode::Async/>
                     <Route path="/Chat" view=Chat/>
                     <Route path="/Settings" view=Settings/>
                     <Route path="/Upcoming" view=Upcoming/>

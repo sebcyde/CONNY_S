@@ -35,6 +35,7 @@
 		},
 		"windows": [
 			{
+				"maximizable": false,
 				"fullscreen": false,
 				"resizable": false,
 				"title": "Conny-S",

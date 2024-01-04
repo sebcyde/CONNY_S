@@ -152,9 +152,11 @@ pub fn Settings() -> impl IntoView {
 
         </form>
 
-        <button on:click=update_user>{saving_text}</button>
-        <a href="/">"Back to Home"</a>
-        <button class="ResetButton" on:click=reset_user>{resetting_text}</button>
+     <div class="button_container">
+      <button class="Themed-Button" on:click=update_user>{saving_text}</button>
+      <a class="Themed-Button" href="/">"Back to Home"</a>
+      <button class="reset_button Themed-Button" on:click=reset_user>{resetting_text}</button>
+     </div>
 
       </div>
     }

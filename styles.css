@@ -1,7 +1,9 @@
 html,
 body,
 :root {
-	background-image: url("./public/background_1.jpg");
+	background-color: black;
+	/* background-image: url("./public/background.jpg"); */
+	font-family: "JetBrains Mono", monospace;
 	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -26,80 +28,44 @@ body,
 }
 
 body > div {
-	flex-direction: column;
-	justify-content: end;
-	height: fit-content;
-	overflow-x: scroll;
-	overflow-y: hidden;
-	min-height: 100%;
-	padding: 2em 0px;
-	margin: 0 auto;
-	display: flex;
-	width: 80%;
-	overflow: overlay;
+	overflow: hidden;
+	padding: 2em;
+	height: 100%;
+	width: 100%;
 	h2 {
-		text-align: center;
+		padding: 2em 0px;
 	}
 }
 
-button,
-a {
-	background-color: rgba(255, 255, 255, 0.06);
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	text-decoration: none;
-	display: inline-block;
-	border-radius: 20px;
-	padding: 20px 32px;
-	border: 0;
-	backdrop-filter: blur(30px);
-	color: rgba(255, 255, 255, 0.8);
-	font-size: 14px;
-	letter-spacing: 2px;
-	cursor: pointer;
-	text-transform: uppercase;
-	margin: 15px auto;
-	width: 80%;
-
-	&.ResetButton {
-		background: radial-gradient(100% 100% at 100% 0%, #ff89e1 0%, #fc2c2c 100%);
-	}
-
+.home_page {
 	justify-content: center;
-	text-decoration: none;
-	align-items: center;
-	text-align: center;
+	flex-direction: column;
 	display: flex;
-}
 
-button:hover,
-a:hover {
-	box-shadow: 0px 4px 8px rgb(45 35 66 / 40%),
-		0px 7px 13px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #3c4fe0;
-	transform: translateY(-2px);
-
-	&.ResetButton {
-		box-shadow: 0px 4px 8px rgb(45 35 66 / 40%),
-			0px 7px 13px -3px rgb(45 35 66 / 30%), inset 0px -3px 0px #722626;
+	.welcome_text {
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		color: white;
+		display: flex;
+		margin: 0px;
+		width: 100%;
+		flex: 1;
 	}
 
-	will-change: filter;
-	transition: 0.5s;
-	filter: drop-shadow(0 0 0.5em #352ef9);
-}
-
-button:active,
-a:active {
-	box-shadow: inset 0px 3px 7px #3c4fe0;
-	transform: translateY(2px);
-}
-
-.HomePage {
-	p {
-		text-align: center;
+	.main_menu {
+		justify-content: space-evenly;
+		flex-direction: column;
+		display: flex;
+		padding: 0px;
+		margin: 0px;
+		height: 80%;
+		width: 100%;
 	}
 }
 
 .settings_page {
+	color: white;
 	.PageTitle {
 		margin: 20px auto;
 		font-size: 35px;
@@ -137,4 +103,141 @@ a:active {
 			}
 		}
 	}
+
+	.button_container {
+		justify-content: space-evenly;
+		flex-direction: column;
+		height: fit-content;
+		padding: 50px 0px;
+		display: flex;
+		margin: 0px;
+		width: 100%;
+	}
+
+	.Themed-Button {
+		margin-bottom: 10px;
+	}
+
+	.reset_button {
+		box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+			rgba(45, 35, 66, 0.3) 0 7px 13px -3px, rgb(85, 0, 0) 0 -3px 0 inset;
+		background-color: brown;
+		color: white;
+
+		&:hover {
+			box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+				rgba(45, 35, 66, 0.3) 0 7px 13px -3px, rgb(85, 0, 0) 0 -3px 0 inset;
+			background-color: brown;
+		}
+	}
+}
+
+.LoadingPage {
+	background-color: black;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+
+	img {
+		height: 100px;
+		width: auto;
+
+		opacity: 1;
+		animation-name: fadeInOpacity;
+		animation-iteration-count: 1;
+		animation-timing-function: ease-in;
+		animation-duration: 1.5s;
+	}
+}
+
+.UpdatesPage,
+.BackupsPage {
+	justify-content: center;
+	flex-direction: column;
+	display: flex;
+
+	.page_title {
+		justify-content: center;
+		height: fit-content;
+		align-items: center;
+		text-align: center;
+		color: white;
+		display: flex;
+		margin: 0px;
+		width: 100%;
+	}
+
+	.button_container {
+		justify-content: space-evenly;
+		flex-direction: column;
+		display: flex;
+		padding: 100px 0px;
+		margin: 0px;
+		height: 80%;
+		width: 100%;
+	}
+
+	.Themed-Button {
+		margin-bottom: 20px;
+	}
+}
+
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+.Themed-Button {
+	align-items: center;
+	appearance: none;
+	background-color: #fcfcfd;
+	border-radius: 4px;
+	border-width: 0;
+	box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+		rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+	box-sizing: border-box;
+	color: #36395a;
+	cursor: pointer;
+	display: inline-flex;
+	font-family: "JetBrains Mono", monospace;
+	height: 48px;
+	justify-content: center;
+	line-height: 1;
+	list-style: none;
+	overflow: hidden;
+	padding-left: 16px;
+	padding-right: 16px;
+	position: relative;
+	text-align: left;
+	text-decoration: none;
+	transition: box-shadow 0.15s, transform 0.15s;
+	user-select: none;
+	-webkit-user-select: none;
+	touch-action: manipulation;
+	white-space: nowrap;
+	will-change: box-shadow, transform;
+	font-size: 18px;
+}
+
+.Themed-Button:focus {
+	box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
+		rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+}
+
+.Themed-Button:hover {
+	box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+		rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+	transform: translateY(-2px);
+}
+
+.Themed-Button:active {
+	box-shadow: #d6d6e7 0 3px 7px inset;
+	transform: translateY(2px);
 }

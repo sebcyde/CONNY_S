@@ -44,18 +44,16 @@ pub fn Home() -> impl IntoView {
     };
 
     view! {
-        <div class="HomePage">
-
-            // <p>{move || welcome_text.get()}</p>
-
-            <div class="MainMenu">
-                <a href="/Chat">"Chat"</a>
-                <button disabled=move || constant_sort.get() on:click=sort_files>{sorting_text}</button>
-                <a href="/Backups">"Backup Databases"</a>
-                <a href="/Updates">"Pull Repositories"</a>
-                <a href="/Settings">"Settings"</a>
-                // <a href="/Upcoming">"Upcoming Features"</a>
-                // <a href="/Other">"Testing Not Found Link"</a>
+        <div class="home_page">
+            <h2 class="welcome_text">{move || welcome_text.get()}</h2>
+            <div class="main_menu">
+                <a class="Themed-Button" href="/Chat">"Chat"</a>
+                <button class="Themed-Button" disabled=move || constant_sort.get() on:click=sort_files>{sorting_text}</button>
+                <a class="Themed-Button" href="/Backups">"Backup Databases"</a>
+                <a class="Themed-Button" href="/Updates">"Pull Repositories"</a>
+                <a class="Themed-Button" href="/Settings">"Settings"</a>
+                // <a class="Themed-Button" href="/Upcoming">"Upcoming Features"</a>
+                // <a class="Themed-Button" href="/Other">"Testing Not Found Link"</a>
             </div>
         </div>
     }
