@@ -17,6 +17,7 @@ use configuration::config::{
 };
 
 use crate::backup::backup::*;
+use crate::monitoring::monitoring::watch_pc_health;
 use crate::notifications::notifications::send_notif;
 use crate::sorting::autosorter::sort_once;
 use crate::updates::updates::{pull, pull_all};
@@ -95,6 +96,14 @@ async fn backup_all() {
     send_notif("All databases backed up.");
 }
 
+#[tauri::command]
+async fn start_system_watch() {
+    println!("Starting system watch");
+    send_notif("Starting system watch");
+    watch_pc_health().await;
+    send_notif("System watch stopped.");
+}
+
 ////////////////// Update Commands
 
 #[tauri::command]
@@ -123,6 +132,7 @@ fn main() {
             get_user,
             reset_user,
             clean_dirs,
+            start_system_watch,
         ])
         .run(tauri::generate_context!())
         .expect("Error while loading Conny...");
