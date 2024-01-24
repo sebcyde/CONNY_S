@@ -12,7 +12,6 @@ extern "C" {
 #[component]
 pub fn Home() -> impl IntoView {
     let (welcome_text, set_welcome_text) = create_signal::<String>(String::new());
-
     let (constant_sort, set_constant_sort) = create_signal::<bool>(false);
 
     spawn_local(async move {
